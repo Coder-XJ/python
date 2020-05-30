@@ -1,0 +1,53 @@
+#-*-coding:utf-8-*-
+#@Time:2020/5/29 19:18
+#@Software:PyCharm
+
+
+import requests
+import re
+import jieba
+import wordcloud
+import imageio
+
+
+url="https://api.bilibili.com/x/v1/dm/list.so?oid=cid"
+#莫浏览器访问
+headers={
+"user-agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Mobile Safari/537.36"
+}
+#获取网页
+response=requests.get(url,headers=headers)
+html=response.content.decode("utf-8")
+
+# print(html)
+# 解析网页
+
+pattern=re.compile(r"<d.*?>(.*?)</d>")
+danmu=re.findall(pattern,html)
+# print(danmu)
+# for i in danmu:
+#     print(i)
+#保存数据
+with open("file_path/file_name","w",newline="",encoding="utf-8") as f:
+    for i in danmu:
+        f.write(i)
+        f.write("\n")
+
+f=open("file_path/file_name",encoding="utf-8")
+txt=f.read()
+txt_list=jieba.lcut(txt)
+# print(txt_list)
+string=" ".join(txt_list)
+# # print(string)
+# #词云显示
+mk = imageio.imread(r"input_picture_path.jpg/png")
+w = wordcloud.WordCloud(
+
+   background_color="white",
+   font_path="font_path",
+   mask=mk,
+   scale=15,
+   stopwords={" ","!",},
+)
+w.generate(string)
+w.to_file(output_picture_path.jpg/png")
